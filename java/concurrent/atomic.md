@@ -284,6 +284,150 @@ static class User {
 }
 ```
 
+# Unsafe一探究竟
+
+Java中的 `Unsafe` 类是一个非常特殊的类，它提供了一些不安全的操作，这些操作通常是Java语言中不允许的，比如直接操作内存、线程挂起、CAS操作等。`Unsafe` 类主要用于Java的底层实现，比如JVM、NIO等，一般情况下不建议开发者直接使用Unsafe类。 `Unsafe` 类的存在是为了方便Java底层的实现，同时也提供了一些高级的操作，比如原子操作、内存分配等，这些操作可以在某些情况下提高程序的性能。
+
+## CAS操作
+
+ `Unsafe` 类提供了最基本的CAS操作的API。
+
+```java
+public final native boolean compareAndSwapObject(Object o, long offset,Object expected, Object x);
+public final native boolean compareAndSwapInt(Object o, long offset,int expected,int x);
+public final native boolean compareAndSwapLong(Object o, long offset,long expected,long x);
+```
+
+## 内存操作
+
+### 直接内存操作
+
+```java
+/分配内存指定大小的内存
+public native long allocateMemory(long bytes);
+//根据给定的内存地址address设置重新分配指定大小的内存
+public native long reallocateMemory(long address, long bytes);
+//用于释放allocateMemory和reallocateMemory申请的内存
+public native void freeMemory(long address);
+//将指定对象的给定offset偏移量内存块中的所有字节设置为固定值
+public native void setMemory(Object o, long offset, long bytes, byte value);
+//设置给定内存地址的值
+public native void putAddress(long address, long x);
+//获取指定内存地址的值
+public native long getAddress(long address);
+
+//设置给定内存地址的long值
+public native void putLong(long address, long x);
+//获取指定内存地址的long值
+public native long getLong(long address);
+//设置或获取指定内存的byte值
+public native byte  getByte(long address);
+public native void  putByte(long address, byte x);
+//其他基本数据类型(long,char,float,double,short等)的操作与putByte及getByte相同
+.......... 省略代码
+//操作系统的内存页大小
+public native int pageSize();
+```
+
+### 对象以及相关操作
+
+```java
+//传入一个对象的class并创建该实例对象，但不会调用构造方法
+public native Object allocateInstance(Class cls) throws InstantiationException;
+
+//获取字段f在实例对象中的偏移量
+public native long objectFieldOffset(Field f);
+//静态属性的偏移量，用于在对应的Class对象中读写静态属性
+public native long staticFieldOffset(Field f);
+//返回值就是f.getDeclaringClass()
+public native Object staticFieldBase(Field f);
+
+
+//获得给定对象偏移量上的int值，所谓的偏移量可以简单理解为指针指向该变量的内存地址，
+//通过偏移量便可得到该对象的变量，进行各种操作
+public native int getInt(Object o, long offset);
+//设置给定对象上偏移量的int值
+public native void putInt(Object o, long offset, int x);
+
+//获得给定对象偏移量上的引用类型的值
+public native Object getObject(Object o, long offset);
+//设置给定对象偏移量上的引用类型的值
+public native void putObject(Object o, long offset, Object x);
+//其他基本数据类型(long,char,byte,float,double)的操作与getInthe及putInt相同
+
+//设置给定对象的int值，使用volatile语义，即设置后立马更新到内存对其他线程可见
+public native void  putIntVolatile(Object o, long offset, int x);
+//获得给定对象的指定偏移量offset的int值，使用volatile语义，总能获取到最新的int值。
+public native int getIntVolatile(Object o, long offset);
+
+//其他基本数据类型(long,char,byte,float,double)的操作与putIntVolatile
+//及getIntVolatile相同，引用类型putObjectVolatile也一样。
+..........省略代码
+
+//与putIntVolatile一样，但要求被操作字段必须有volatile修饰
+public native void putOrderedInt(Object o,long offset,int x);
+```
+
+### 数组以及相关操作
+
+```java
+//获取数组第一个元素的偏移地址
+public native int arrayBaseOffset(Class arrayClass);
+//数组中一个元素占据的内存空间,arrayBaseOffset与arrayIndexScale配合使用，可定位数组中每个元素在内存中的位置
+public native int arrayIndexScale(Class arrayClass);
+```
+
+## 线程操作
+
+将一个线程进行挂起是通过 `park` 方法实现的，调用 `park` 后，线程将一直阻塞直到超时或者中断等条件出现。 `unpark` 可以终止一个挂起的线程，使其恢复正常。Java对线程的挂起操作被封装在 `LockSupport` 类中，`LockSupport` 类中有各种版本 `pack` 方法，其底层实现最终还是使用 `Unsafe.park()` 方法和 `Unsafe.unpark()` 方法来实现。
+
+```java
+//线程调用该方法，线程将一直阻塞直到超时，或者是中断条件出现。  
+public native void park(boolean isAbsolute, long time);  
+
+//终止挂起的线程，恢复正常.java.util.concurrent包中挂起操作都是在LockSupport类实现的，其底层正是使用这两个方法，  
+public native void unpark(Object thread); 
+```
+
+## 内存屏障
+
+```java
+//在该方法之前的所有读操作，一定在load屏障之前执行完成
+public native void loadFence();
+//在该方法之前的所有写操作，一定在store屏障之前执行完成
+public native void storeFence();
+//在该方法之前的所有读写操作，一定在full屏障之前执行完成，这个内存屏障相当于上面两个的合体功能
+public native void fullFence();
+```
+
+## 其他操作
+
+```java
+//获取持有锁，已不建议使用
+@Deprecated
+public native void monitorEnter(Object var1);
+//释放锁，已不建议使用
+@Deprecated
+public native void monitorExit(Object var1);
+//尝试获取锁，已不建议使用
+@Deprecated
+public native boolean tryMonitorEnter(Object var1);
+
+//获取本机内存的页数，这个值永远都是2的幂次方  
+public native int pageSize();  
+
+//告诉虚拟机定义了一个没有安全检查的类，默认情况下这个类加载器和保护域来着调用者类  
+public native Class defineClass(String name, byte[] b, int off, int len, ClassLoader loader, ProtectionDomain protectionDomain);  
+
+//加载一个匿名类
+public native Class defineAnonymousClass(Class hostClass, byte[] data, Object[] cpPatches);
+//判断是否需要加载一个类
+public native boolean shouldBeInitialized(Class<?> c);
+//确保类一定被加载 
+public native  void ensureClassInitialized(Class<?> c);
+```
+
 # 参考资料
 
-*[JavaGuide - Atomic原子类总结](https://javaguide.cn/java/concurrent/atomic-classes.html)
+* [JavaGuide - Atomic原子类总结](https://javaguide.cn/java/concurrent/atomic-classes.html)
+* [掘金 - (四)深入理解Java并发编程之无锁CAS机制、魔法类Unsafe、原子包Atomic](https://juejin.cn/post/7078545790594973733)

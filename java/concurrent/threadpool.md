@@ -580,11 +580,25 @@ public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize, 
 
 ## ForkJoinPool
 
+ `ForkJoinPool` 采用了**分治法（Divide-and-Conquer）**的思想把任务拆成多个子任务进行解决然后合并子任务的计算结果。用了最大化利用CPU资源，采用了**工作窃取（work-stealing）**的算法，允许空闲线程窃取其他线程的队列任务。
+
 ```java
 public static ExecutorService newWorkStealingPool(int parallelism) {
     return new ForkJoinPool(parallelism, ForkJoinPool.defaultForkJoinWorkerThreadFactory, null, true);
 }
 ```
+
+在 `ForkJoinPool` 中，线程池中每个工作线程 `ForkJoinWorkerThread` 都对应一个任务队列 `WorkQueue` ，工作线程优先处理来自自身队列的任务(**LIFO**或**FIFO**顺序，参数 `mode` 决定)，然后以FIFO的顺序随机窃取其他队列中的任务。
+
+具体思路如下：
+* 每个线程都有自己的一个 `WorkQueue` ，该工作队列是一个双端队列，支持三个功能 `push` 、`pop` 、`poll`。
+* 任务主要分为两种：外部提交任务（submission task）放在 `WorkQueue` 的偶数下标中，任务自己 fork 的任务（worker task）放在 `WorkQueue` 的奇数下标中，只有奇数下标有线程。
+* `push` 和 `pop` 只能被队列的所有者线程调用，而 `poll` 可以被其他线程调用。划分的子任务调用 `fork` 时，都会被 `push` 到自己的队列中。通过 `poll` 操作窃取其他线程的任务。
+* 默认情况下，工作线程从自己的双端队列获出任务并执行。当自己的队列为空时，线程随机从另一个线程的队列末尾调用 `poll` 方法窃取任务。
+
+![](/resources/images/java/concurrent/forkjoinpool-workqueue.awebp)
+
+更多内容可以阅览 [掘金 - ForkJoinPool大型图文现场（一阅到底 vs 直接收藏）](https://juejin.cn/post/6932632481526972430)。
 
 # 线程池原理详解
 
@@ -766,3 +780,5 @@ Worker执行任务的模型如下图所示：
 * [JavaGuide - Java 线程池详解](https://javaguide.cn/java/concurrent/java-thread-pool-summary.html)
 * [美团技术团队 - Java线程池实现原理及其在美团业务中的实践](https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html)
 * [硬核干货：4W字从源码上分析JUC线程池ThreadPoolExecutor的实现原理](https://www.throwx.cn/2020/08/23/java-concurrency-thread-pool-executor/)
+* [掘金 - ForkJoinPool大型图文现场（一阅到底 vs 直接收藏）](https://juejin.cn/post/6932632481526972430)
+* [JUC线程池: Fork/Join框架详解](https://pdai.tech/md/java/thread/java-thread-x-juc-executor-ForkJoinPool.html)

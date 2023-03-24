@@ -46,7 +46,6 @@ public class GoodsController {
         return BaseResponse.<Void>success().build();
     }
 }
-
 ```
 
 ### @Controller 和 @RestController
@@ -80,3 +79,18 @@ public class GoodsController {
 @RequestParam
 
 @RequestVariable
+
+### @RequestHeader
+
+用于方法参数和HTTP的Header绑定。
+
+```java
+@RequestMapping(value="/requestHeaderTest")
+public void requestHeaderTest(
+    @RequestHeader("User-Agent") String userAgent,
+    @RequestHeader(value="Accept", required=false) String[] accepts) {
+    ...
+}
+```
+
+@CookieValue
