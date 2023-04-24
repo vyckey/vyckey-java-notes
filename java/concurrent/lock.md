@@ -546,6 +546,9 @@ public class MyBlockingQueue {
 
 ## Semaphore
 
+## CountDownLatch
+
+`CountDownLatch` 可以使一个或多个线程等待，直到其他线程的一系列操作完成，用来实现多线程屏障。
 
 SynchronousQueue
 

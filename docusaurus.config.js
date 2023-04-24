@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
+  title: 'Computer Learning Map',
   tagline: 'Dinosaurs are cool',
   favicon: 'img/favicon.ico',
 
@@ -31,6 +31,29 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  plugins: [
+    [
+      'content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      ({
+        id: 'tutorial-docs',
+        path: 'tutorial-docs',
+        routeBasePath: 'tutorial-docs',
+        // editUrl: ({locale, versionDocsDirPath, docPath}) => {
+        //   if (locale !== defaultLocale) {
+        //     return `https://crowdin.com/project/docusaurus-v2/${locale}`;
+        //   }
+        //   return `https://github.com/facebook/docusaurus/edit/main/website/${versionDocsDirPath}/${docPath}`;
+        // },
+        // remarkPlugins: [npm2yarn],
+        editCurrentVersion: true,
+        sidebarPath: require.resolve('./sidebars.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+      }),
+    ],
+  ],
 
   presets: [
     [
@@ -72,11 +95,12 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'docsSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Docs',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
+          {to: '/tutorial-docs/intro', label: 'Tutorial', position: 'left'},
           {
             href: 'https://github.com/facebook/docusaurus',
             label: 'GitHub',

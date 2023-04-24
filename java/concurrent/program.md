@@ -184,5 +184,66 @@ public class ProducerConsumerTest {
 }
 ```
 
+## CountDownLatch
+
+> 实现学生一起比赛跑步的程序，CountDownLatch 初始化为学生数量的线程，鸣枪后，每个学生就是一条线程，来完成各自的任务，当第一个学生跑完全程后，CountDownLatch 就会减一，直到所有的学生完成后，CountDownLatch 会变为 0 ，接下来再一起宣布跑步成绩。
+
+```java
+public class StudentRunRace {
+    private final int studentCount;
+    private final CountDownLatch stopLatch;
+    private final CountDownLatch runLatch;
+
+    StudentRunRace(int studentCount) {
+        this.studentCount = studentCount;
+        this.stopLatch = new CountDownLatch(1);
+        this.runLatch = new CountDownLatch(studentCount);
+    }
+
+    private void waitSignal() throws Exception {
+        System.out.println("选手" + Thread.currentThread().getName() + "正在等待裁判发布口令");
+        stopLatch.await();
+        System.out.println("选手" + Thread.currentThread().getName() + "已接受裁判口令");
+        Thread.sleep((long) (Math.random() * 10000));
+        System.out.println("选手" + Thread.currentThread().getName() + "到达终点");
+        runLatch.countDown();
+    }
+
+    private void waitStop() throws Exception {
+        Thread.sleep((long) (Math.random() * 10000));
+        System.out.println("裁判" + Thread.currentThread().getName() + "即将发布口令");
+        stopLatch.countDown();
+        System.out.println("裁判" + Thread.currentThread().getName() + "已发送口令，正在等待所有选手到达终点");
+        runLatch.await();
+        System.out.println("所有选手都到达终点");
+        System.out.println("裁判" + Thread.currentThread().getName() + "汇总成绩排名");
+    }
+
+    public void startRace() {
+        ExecutorService service = Executors.newCachedThreadPool();
+        for (int i = 0; i < studentCount; i++) {
+            service.execute(() -> {
+                try {
+                    waitSignal();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        try {
+            waitStop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        service.shutdown();
+    }
+
+    public static void main(String[] args) {
+        StudentRunRace studentRunRace = new StudentRunRace(10);
+        studentRunRace.startRace();
+    }
+}
+```
+
 
 * [掘金 - Java实现生产者和消费者的5种方式](https://juejin.cn/post/6844903486895865864)
