@@ -1,3 +1,10 @@
+---
+title: Database
+tags: [database]
+sidebar_label: Database
+sidebar_position: 4
+---
+
 # 数据库基础知识
 
 ## 基本概念

@@ -1,3 +1,9 @@
+---
+title: Bigdata
+tags: [bigdata]
+sidebar_label: Bigdata
+sidebar_position: 6
+---
 
 关键词
 
