@@ -4,7 +4,7 @@ ELK架构就是由**Elasticsearch**、**Logstash**、**Kibana**这三个开源�
 
 ## 简介
 
-![ELK架构图](/resources/images/framework/elk-arch.png)
+![ELK架构图](/images/framework/elk-arch.png)
 
 ### FileBeat
 

@@ -8,7 +8,7 @@
 3. 初始化（Initialization）
 4. 销毁（Destruction）
 
-[Bean生命周期彩图版本](/resources/images/framework/spring/bean-lifecycle.png)
+[Bean生命周期彩图版本](/images/framework/spring/bean-lifecycle.png)
 
 ```flow
 st=>start: 容器启动

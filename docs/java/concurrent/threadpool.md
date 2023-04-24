@@ -277,10 +277,10 @@ public interface ExecutorService extends Executor {
 
 ### `Executor`框架介绍
 
-![Executor框架](../../resources/images/java/executor-arch.png)
+![Executor框架](/images/java/executor-arch.png)
 
 1. 主线程首先要创建实现 `Runnable` 或者 `Callable` 接口的任务对象。
-2. 把创建完成的实现 `Runnable`/`Callable`接口的 对象直接交给 `ExecutorService` 执行: `ExecutorService.execute`（Runnable command））或者也可以把 Runnable 对象或Callable 对象提交给 `ExecutorService` 执行（`ExecutorService.submit`（Runnable task）或 `ExecutorService.submit`（Callable <T> task））。
+2. 把创建完成的实现 `Runnable`/`Callable`接口的 对象直接交给 `ExecutorService` 执行: `ExecutorService.execute`（Runnable command））或者也可以把 Runnable 对象或Callable 对象提交给 `ExecutorService` 执行（`ExecutorService.submit`（Runnable task）或 `ExecutorService.submit`（Callable&lt;T&gt; task））。
 3. 如果执行 E`xecutorService.submit(…)`，`ExecutorService` 将返回一个实现`Future`接口的对象（我们刚刚也提到过了执行 `execute()`方法和 `submit()`方法的区别，`submit(`)会返回一个 `FutureTask` 对象）。由于 `FutureTask` 实现了 `Runnable`，我们也可以创建 `FutureTask`，然后直接交给 `ExecutorService` 执行。
 4. 最后，主线程可以执行 `FutureTask.get()`方法来等待任务执行完成。主线程也可以执行 `FutureTask.cancel(boolean mayInterruptIfRunning)`来取消此任务的执行。
 
@@ -293,7 +293,7 @@ public interface ExecutorService extends Executor {
 线程池在内部实际上构建了一个**生产者消费者模型，将线程和任务两者解耦**，并不直接关联，从而良好的缓冲任务，复用线程。线程池的运行主要分成两部分：**任务管理**、**线程管理**。任务管理部分充当生产者的角色，当任务提交后，线程池会判断该任务后续的流转：（1）直接申请线程执行该任务；（2）缓冲到队列中等待线程执行；（3）拒绝该任务。线程管理部分是消费者，它们被统一维护在线程池内，根据任务请求进行线程的分配，当线程执行完任务后则会继续获取新的任务去执行，最终当线程获取不到任务的时候，线程就会被回收。
 
 线程池运行机制如下图所示：
-![](../../resources/images/java/threadpoolexecutor.png)
+![](/images/java/threadpoolexecutor.png)
 
 ## 线程池的核心参数
 
@@ -515,7 +515,7 @@ public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory thr
 }
 ```
 `FixedThreadPool#execute()` 方法运行示意图（该图片来源：《Java 并发编程的艺术》）：
-![](../../resources/images/java/FixedThreadPool.png)
+![](/images/java/FixedThreadPool.png)
 
 需要注意的是，`FixedThreadPool`使用无界队列来排队提交的任务，所以不会拒绝任意的提交任务，可能导致OOM，所以**不建议直接使用`Executors.newFixedThreadPool()`来创建固定数量的线程池**。
 
@@ -531,7 +531,7 @@ public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactor
 ```
 
 `SingleThreadExecutor#execute()` 方法运行示意图（该图片来源：《Java 并发编程的艺术》）：
-![](../../resources/images/java/SingleThreadExecutor.png)
+![](/images/java/SingleThreadExecutor.png)
 
 ## CachedThreadPool
 
@@ -543,7 +543,7 @@ public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) {
 ```
 
 `CachedThreadPool#execute()` 方法运行示意图（该图片来源：《Java 并发编程的艺术》）：
-![](../../resources/images/java/CachedThreadPool.png)
+![](/images/java/CachedThreadPool.png)
 
 ## ScheduledThreadPoolExecutor
 
@@ -553,7 +553,7 @@ public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize, 
 }
 ```
 
-![](../../resources/images/java/ScheduledThreadPoolExecutor.png)
+![](/images/java/ScheduledThreadPoolExecutor.png)
 
 `ScheduledThreadPoolExecutor` 的执行主要分为两大部分：
 1. 当调用 `ScheduledThreadPoolExecutor` 的 `scheduleAtFixedRate()` 方法或者 `scheduleWithFixedDelay()` 方法时，会向 `ScheduledThreadPoolExecutor` 的 `DelayQueue` 添加一个实现了 `RunnableScheduledFuture` 接口的 `ScheduledFutureTask` 。
@@ -561,7 +561,7 @@ public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize, 
 
 `ScheduledThreadPoolExecutor` 为了实现周期性的执行任务，对 `ThreadPoolExecutor `做了如下修改：使用 `DelayQueue` 作为任务队列；获取任务的方不同执行周期任务后，增加了额外的处理。
 
-![](../../resources/images/java/ScheduledThreadPoolExecutor2.png)
+![](/images/java/ScheduledThreadPoolExecutor2.png)
 
 `ScheduledThreadPoolExecutor` 执行周期任务的步骤：
 1. 线程 1 从 `DelayQueue` 中获取已到期的 `ScheduledFutureTask`（`DelayQueue.take()`）。到期任务是指 `ScheduledFutureTask`的 `time` 大于等于当前系统的时间；
@@ -596,7 +596,7 @@ public static ExecutorService newWorkStealingPool(int parallelism) {
 * `push` 和 `pop` 只能被队列的所有者线程调用，而 `poll` 可以被其他线程调用。划分的子任务调用 `fork` 时，都会被 `push` 到自己的队列中。通过 `poll` 操作窃取其他线程的任务。
 * 默认情况下，工作线程从自己的双端队列获出任务并执行。当自己的队列为空时，线程随机从另一个线程的队列末尾调用 `poll` 方法窃取任务。
 
-![](/resources/images/java/concurrent/forkjoinpool-workqueue.awebp)
+![](/images/java/concurrent/forkjoinpool-workqueue.awebp)
 
 更多内容可以阅览 [掘金 - ForkJoinPool大型图文现场（一阅到底 vs 直接收藏）](https://juejin.cn/post/6932632481526972430)。
 
@@ -643,7 +643,7 @@ private static final int TERMINATED =  3 << COUNT_BITS;
 | TERMINATED | 在`terminate()`方法处理完成之后进入该状态 |
 
 其生命周期转换如下入所示：
-![](../../resources/images/java/threadpool-states.png)
+![](/images/java/threadpool-states.png)
 
 ## 任务执行机制
 
@@ -651,7 +651,7 @@ private static final int TERMINATED =  3 << COUNT_BITS;
 
 任务调度是线程池的主要入口，当用户提交了一个任务，接下来这个任务将如何执行都是由这个阶段决定的。了解这部分就相当于了解了线程池的核心运行机制。所有任务的调度都是由execute方法完成的，这部分完成的工作是：检查现在线程池的运行状态、运行线程数、运行策略，决定接下来执行的流程，是直接申请线程执行，或是缓冲到队列中执行，亦或是直接拒绝该任务。其执行流程如下图所示：
 
-![](../../resources/images/java/threadpool-task-process.png)
+![](/images/java/threadpool-task-process.png)
 
 ### 任务缓冲
 
@@ -660,7 +660,7 @@ private static final int TERMINATED =  3 << COUNT_BITS;
 阻塞队列(BlockingQueue)是一个支持两个附加操作的队列。这两个附加的操作是：在队列为空时，获取元素的线程会等待队列变为非空。当队列满时，存储元素的线程会等待队列可用。阻塞队列常用于生产者和消费者的场景，生产者是往队列里添加元素的线程，消费者是从队列里拿元素的线程。阻塞队列就是生产者存放元素的容器，而消费者也只从容器里拿元素。
 
 使用不同的队列可以实现不一样的任务存取策略。常见的阻塞队列有：
-![](../../resources/images/java/threadpool-blockingqueue.png)
+![](/images/java/threadpool-blockingqueue.png)
 
 ### 任务申请
 
@@ -668,7 +668,7 @@ private static final int TERMINATED =  3 << COUNT_BITS;
 
 线程需要从任务缓存模块中不断地取任务执行，帮助线程从阻塞队列中获取任务，实现线程管理模块和任务管理模块之间的通信。这部分策略由getTask方法实现，其执行流程如下图所示：
 
-![](../../resources/images/java/threadpool-gettask-process.png)
+![](/images/java/threadpool-gettask-process.png)
 
 getTask这部分进行了多次判断，为的是控制线程的数量，使其符合线程池的状态。如果线程池现在不应该持有那么多线程，则会返回null值。工作线程Worker会不断接收新任务去执行，而当工作线程Worker接收不到任务的时候，就会开始被回收。
 
@@ -722,7 +722,7 @@ private final class Worker extends AbstractQueuedSynchronizer implements Runnabl
 Worker这个工作线程，实现了Runnable接口，并持有一个线程thread，一个初始化的任务firstTask。thread是在调用构造方法时通过ThreadFactory来创建的线程，可以用来执行任务；firstTask用它来保存传入的第一个任务，这个任务可以有也可以为null。如果这个值是非空的，那么线程就会在启动初期立即执行这个任务，也就对应核心线程创建时的情况；如果这个值是null，那么就需要创建一个线程去执行任务列表（workQueue）中的任务，也就是非核心线程的创建。
 
 Worker执行任务的模型如下图所示：
-![](../../resources/images/java/threadpool-worker.png)
+![](/images/java/threadpool-worker.png)
 
 线程池需要管理线程的生命周期，需要在线程长时间不运行的时候进行回收。线程池使用一张Hash表去持有线程的引用，这样可以通过添加引用、移除引用这样的操作来控制线程的生命周期。这个时候重要的就是如何判断线程是否在运行。
 
@@ -734,20 +734,20 @@ Worker执行任务的模型如下图所示：
 4. 线程池在执行shutdown方法或tryTerminate方法时会调用interruptIdleWorkers方法来中断空闲的线程，interruptIdleWorkers方法会使用tryLock方法来判断线程池中的线程是否是空闲状态；如果线程是空闲状态则可以安全回收。
 
 在线程回收过程中就使用到了这种特性，回收过程如下图所示：
-![](../../resources/images/java/threadpool-thread-recycling.png)
+![](/images/java/threadpool-thread-recycling.png)
 
 ### Worker线程增加
 
 增加线程是通过线程池中的addWorker方法，该方法的功能就是增加一个线程，该方法不考虑线程池是在哪个阶段增加的该线程，这个分配线程的策略是在上个步骤完成的，该步骤仅仅完成增加线程，并使它运行，最后返回是否成功这个结果。addWorker方法有两个参数：firstTask、core。firstTask参数用于指定新增的线程执行的第一个任务，该参数可以为空；core参数为true表示在新增线程时会判断当前活动线程数是否少于corePoolSize，false表示新增线程前需要判断当前活动线程数是否少于maximumPoolSize，其执行流程如下图所示：
 
-![](../../resources/images/java/threadpool-addworker.png)
+![](/images/java/threadpool-addworker.png)
 
 ### Worker线程处理任务
 
 在Worker类中的run方法调用了runWorker方法来执行任务，runWorker方法的执行过程如下：
 1.while循环不断地通过getTask()方法获取任务。 2.getTask()方法从阻塞队列中取任务。 3.如果线程池正在停止，那么要保证当前线程是中断状态，否则要保证当前线程不是中断状态。 4.执行任务。 5.如果getTask结果为null则跳出循环，执行processWorkerExit()方法，销毁线程。
 执行流程如下图所示：
-![](../../resources/images/java/threadpool-worker-executing.png)
+![](/images/java/threadpool-worker-executing.png)
 
 ### Worker线程回收
 

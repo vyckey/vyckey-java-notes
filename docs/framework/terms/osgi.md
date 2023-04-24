@@ -19,7 +19,7 @@ OSGI R1 于 2000 年发布，现在最新的标准版本是 R5，到现在为止
 
 这里你需要理解 OSGi 框架的三个最重要部分：**模块层**、**生命周期层**、**服务层**。
 
-![图1 OSGI框架组成](/resources/images/terms/osgi-arch.png)
+![图1 OSGI框架组成](/images/terms/osgi-arch.png)
 
 * **模块层** ：关注打包和代码共享。
 OSGi 是严格要求模块化的，模块有个专有名词 bundle。每个模块都是一个 bundle，一个 Business Logic 由多个 bundle 来实现。
@@ -44,7 +44,7 @@ OSGi 技术全面贯彻了 SOA，每个 bundle 都是其他 bundle 提供服务�
 
 状态是 Bundle 在运行期的一项动态属性，不同状态的 Bundle 具有不同的行为，生命周期层规范定义了 Bundle 生命周期过程之中的 6 种状态。
 
-![图2 OSGI生命周期](/resources/images/terms/osgi-lifecycle.png)
+![图2 OSGI生命周期](/images/terms/osgi-lifecycle.png)
 
 OSGi 生命周期层有两种不同的作用:
 1. 在应用程序外部，定义了对 bundle 生命周期的相关操作。OSGi 生命周期层允许在执行时，从外部安装、启动、更新、停止、卸载不同的 bundle 进而定制应用的配置。
@@ -56,7 +56,7 @@ OSGi 的服务层除了面向服务的编程模型，还有一个区别于其他
 
 OSGi 框架有一个中心化的注册表，这个注册表从 publish-find-bind 模型：
 
-![图3 OSGI服务层](/resources/images/terms/osgi-service.png)
+![图3 OSGI服务层](/images/terms/osgi-service.png)
 
 ## OSGI 纲要规范
 除了上述 OSGi 核心规范(core specification)中的服务，OSGi 联盟也定义了一组非核心的(non-core)标准服务，称为 compendium 服务。Core 服务在任何运行的 OSGi 框架内都是可用的，这要求所有的 OSGi 框架都要实现核心服务。而 compendium 服务则不然。这些服务以分离的 bundle 的形式出现，由框架实施者或者第三方实现并提供，能在任何框架上运行。

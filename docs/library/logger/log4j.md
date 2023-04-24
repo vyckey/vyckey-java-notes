@@ -12,19 +12,19 @@
 
 异步日志峰值吞吐量比较：
 
-![日志框架异步吞吐量比较](/resources/images/framework/log4j-aync-throughput-compare.png)
+![日志框架异步吞吐量比较](/images/framework/log4j-aync-throughput-compare.png)
 
 异步日志响应时长比较：
-![日志框架异步延迟比较](/resources/images/framework/log4j-aync-latency-compare.png)
+![日志框架异步延迟比较](/images/framework/log4j-aync-latency-compare.png)
 
 异步日志消息参数化比较
-![日志框架异步消息参数化比较](/resources/images/framework/log4j-aync-message-compare.png)
+![日志框架异步消息参数化比较](/images/framework/log4j-aync-message-compare.png)
 
 ## Log4j日志框架
 
 Log4j的核心组件类图如下：
 
-![log4j核心组件类图](/resources/images/framework/log4j-arch.png)
+![log4j核心组件类图](/images/framework/log4j-arch.png)
 
 应用方使用Log4j2的API，指定的`name`请求`LogManager`获取`Logger`。`LogManager`会定位到一个`LoggerContext`，然后由它获取`Logger`，如果`Logger`需要新建的话，则会关联一个`LoggerConfig`。`LoggerConfig`由`Logger`的配置生成，有三种来源：`Logger`同名、父目录包或根目录包配置，然后关联到发送`LogEvents`的`Appenders`。
 
@@ -338,19 +338,19 @@ Log4j允许多个配置文件通过逗号分割的文件路径配置到系统属
 Log4j提供了一些已有的 [Log4j-Appenders](https://logging.apache.org/log4j/2.x/manual/appenders.html)，下面列出一些常见的Appenders：
 | Appender类 | 描述 | 参数 |
 | --- | --- | --- |
-| `org.apache.log4j.ConsoleAppender` | 控制台输出 | Threshold=WARN：日志消息的输出最低层次。<br>ImmediateFlush=true：默认值是true，所有的消息是否被立即输出。<br>Target=System.err：默认情况下是：System.out，指定输出控制台。
-| `org.apache.log4j.FileAppender`| 文件输出 | Threshold=WARN：日志消息的输出最低层次。<br>ImmediateFlush=true：默认值是true，所有的消息是否被立即输出。<br>File=mylog.txt：指定消息输出到mylog.txt文件。<br>Append=false：默认值是true，true追加，false覆盖。|
-| `org.apache.log4j.DailyRollingFileAppender` | 天级日志文件 | Threshold=WARN：日志消息的输出最低层次。<br>ImmediateFlush=true：默认值是true，所有的消息是否被立即输出。<br>File=mylog.txt：指定消息输出到mylog.txt文件。<br>Append=false：默认值是true，true追加，false覆盖。<br>DatePattern=''.''yyyy-ww：每周滚动一次文件，即每周产生一个新的文件。
-| `org.apache.log4j.RollingFileAppender` | 固定大小日志文件 | Threshold=WARN:指定日志消息的输出最低层次。ImmediateFlush=true：默认值是true,意谓着所有的消息都会被立即输出。<br>File=mylog.txt：指定消息输出到mylog.txt文件。<br>Append=false：默认值是true，true追加，false覆盖<br><br>MaxFileSize=100KB: 后缀可以是KB, MB 或者是 GB. 在日志文件到达该大小时，将会自动滚动，即将原来的内容移到 mylog.log.1 文件。<br>MaxBackupIndex=2:指定可以产生的滚动文件的最大数。|
+| `org.apache.log4j.ConsoleAppender` | 控制台输出 | Threshold=WARN：日志消息的输出最低层次。<br/>ImmediateFlush=true：默认值是true，所有的消息是否被立即输出。<br/>Target=System.err：默认情况下是：System.out，指定输出控制台。
+| `org.apache.log4j.FileAppender`| 文件输出 | Threshold=WARN：日志消息的输出最低层次。<br/>ImmediateFlush=true：默认值是true，所有的消息是否被立即输出。<br/>File=mylog.txt：指定消息输出到mylog.txt文件。<br/>Append=false：默认值是true，true追加，false覆盖。|
+| `org.apache.log4j.DailyRollingFileAppender` | 天级日志文件 | Threshold=WARN：日志消息的输出最低层次。<br/>ImmediateFlush=true：默认值是true，所有的消息是否被立即输出。<br/>File=mylog.txt：指定消息输出到mylog.txt文件。<br/>Append=false：默认值是true，true追加，false覆盖。<br/>DatePattern=''.''yyyy-ww：每周滚动一次文件，即每周产生一个新的文件。
+| `org.apache.log4j.RollingFileAppender` | 固定大小日志文件 | Threshold=WARN:指定日志消息的输出最低层次。ImmediateFlush=true：默认值是true,意谓着所有的消息都会被立即输出。<br/>File=mylog.txt：指定消息输出到mylog.txt文件。<br/>Append=false：默认值是true，true追加，false覆盖<br/>MaxFileSize=100KB: 后缀可以是KB, MB 或者是 GB. 在日志文件到达该大小时，将会自动滚动，即将原来的内容移到 mylog.log.1 文件。<br/>MaxBackupIndex=2:指定可以产生的滚动文件的最大数。|
 | `org.apache.log4j.WriterAppender` | 将日志信息以流格式 | |
 
 Log4j提供了一些已有的 [Log4j-Layouts](https://logging.apache.org/log4j/2.x/manual/layouts.html)，以下列举了一些常见的：
 
 | Layout类 | 描述 | 参数 |
 | --- | --- | --- |
-| `org.apache.log4j.HTMLLayout` | 以HTML表格形式布局 | LocationInfo=true：默认值是false，输出java文件名称和行号<br>Title=my app file: 默认值是 Log4J Log Messages。|
+| `org.apache.log4j.HTMLLayout` | 以HTML表格形式布局 | LocationInfo=true：默认值是false，输出java文件名称和行号<br/>Title=my app file: 默认值是 Log4J Log Messages。|
 | `org.apache.log4j.PatternLayout` | 可以灵活地指定布局模式| ConversionPattern=%m%n :指定怎样格式化指定的消息。|
-| `org.apache.log4j.SimpleLayout` | 包含日志信息的级别和信息字符串 | LocationInfo=true：默认值是 false,输出 java 文件和行号。<br>og4j.appender.A1.layout.ConversionPattern=xxxxx：类C语言printf的日志格式。 |
+| `org.apache.log4j.SimpleLayout` | 包含日志信息的级别和信息字符串 | LocationInfo=true：默认值是 false,输出 java 文件和行号。<br/>og4j.appender.A1.layout.ConversionPattern=xxxxx：类C语言printf的日志格式。 |
 
 PatternLayout格式化符号说明：
 * %p：输出日志信息的优先级，即DEBUG，INFO，WARN，ERROR，FATAL。
