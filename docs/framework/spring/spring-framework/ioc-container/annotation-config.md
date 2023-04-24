@@ -1,3 +1,10 @@
+---
+title: Annotation Configuration
+tags: [java, spring, spring-configuration]
+sidebar_label: Annotation Configuration
+sidebar_position: 3
+---
+
 # 基于注解的配置
 
 ## 用于创建Bean的注解

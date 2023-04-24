@@ -1,3 +1,10 @@
+---
+title: CompletableFuture
+tags: [java, future, completablefuture]
+sidebar_label: CompletableFuture
+sidebar_position: 1
+---
+
 # Future 知识回顾
 
 **`Future` 接口用于代表异步计算的结果**，通过 `Future` 接口提供的方法可以查看异步计算是否执行完成，或者等待执行结果并获取执行结果，同时还可以取消执行。以下是 `Future` 接口的方法：

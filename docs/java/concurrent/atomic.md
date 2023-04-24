@@ -1,3 +1,10 @@
+---
+title: Atomic
+tags: [java, concurrent, atom]
+sidebar_label: Atomic
+sidebar_position: 1
+---
+
 `Atomic` 是原子的意思，在计算机中，表示是一个不可中断的特性。
 
 Java 中并发包`java.util.concurrent`的原子类都存放在`java.util.concurrent.atomic`包。根据操作的数据类型，可分为四类：

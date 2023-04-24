@@ -1,3 +1,10 @@
+---
+title: IoC
+tags: [java, spring, ioc]
+sidebar_label: IoC
+sidebar_position: 1
+---
+
 # 依赖注入
 
 依赖注入（Dependency Injection，简称DI）是一个过程，objects在被创建之后，仅仅通过构造参数、工厂方法参数或者要设置的属性去定义他们的依赖。使用DI规则的代码更加清晰和高效的解耦，对象不会查找他的依赖，并且也不知道他们依赖的位置。因此，这些类变得很容易测试，特别是当依赖是接口或者抽象类的时候，可以通过stub或者mock实现来进行单元测试。

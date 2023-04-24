@@ -1,3 +1,10 @@
+---
+title: Lock
+tags: [java, concurrent, lock]
+sidebar_label: Lock
+sidebar_position: 1
+---
+
 # 锁有什么用？
 
 在多线程或多进程中访问共享资源，如果没有锁会导致程序出现不可预期的问题，数据不一致，并发死锁等问题。

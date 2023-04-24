@@ -1,3 +1,10 @@
+---
+title: Bean
+tags: [java, spring, spring-framework]
+sidebar_label: Bean
+sidebar_position: 2
+---
+
 # Bean的生命周期
 
 ## Bean生命周期介绍

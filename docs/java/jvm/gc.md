@@ -1,3 +1,10 @@
+---
+title: GC
+tags: [java, jvm, gc]
+sidebar_label: GC
+sidebar_position: 1
+---
+
 [toc]
 
 # 对象的四种引用类型

@@ -1,3 +1,10 @@
+---
+title: XML Configuration
+tags: [java, spring, spring-configuration]
+sidebar_label: XML Configuration
+sidebar_position: 4
+---
+
 # 基于XML的配置
 
 ## 基本流程
