@@ -6,8 +6,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Computer Learning Map',
-  tagline: 'Dinosaurs are cool',
+  title: 'Vyckey Java Notes',
+  tagline: 'Programmer are cool ~',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -20,7 +20,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'vyckey', // Usually your GitHub org/user name.
-  projectName: 'computer-learning-map', // Usually your repo name.
+  projectName: 'vyckey-java-notes', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -88,7 +88,7 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'Hoily Site',
+        title: 'Vyckey Notes',
         logo: {
           alt: 'My Site Logo',
           src: 'img/logo.jpeg',
@@ -98,12 +98,12 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'docsSidebar',
             position: 'left',
-            label: 'Docs',
+            label: 'Notes',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {to: '/tutorial-docs/intro', label: 'Tutorial', position: 'left'},
           {
-            href: 'https://github.com/vyckey/computer-learning-map',
+            href: 'https://github.com/vyckey/vyckey-java-notes',
             label: 'GitHub',
             position: 'right',
           },
@@ -117,7 +117,7 @@ const config = {
             items: [
               {
                 label: 'Tutorial',
-                to: '/tutorial-docs/intro',
+                to: '/docs',
               },
             ],
           },
@@ -127,10 +127,6 @@ const config = {
               {
                 label: 'Stack Overflow',
                 href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
               },
               {
                 label: 'Twitter',
@@ -147,12 +143,12 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/vyckey/computer-learning-map',
+                href: 'https://github.com/vyckey/vyckey-java-notes',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Vyckey's Project, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
