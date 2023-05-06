@@ -136,6 +136,24 @@ public class Example {
 
 ### @Import
 
+只能注解到类上，用于导入一个或多个 `Component` 。允许导入 `@Configuration` 注解的类，`ImportSelector` 和 `ImportBeanDefinitionRegistrar` 的实现类，也包含一些常规的 `Component` 类，功能类似于 `AnnotationConfigApplicationContext#register` 。
+
+需要注意的是，在 `@ComponentScan` 扫描的包之内的 `Bean` ，没有必要单独进行 `import` ，只有当不在扫描包内，再加 `@Import` 注解进行导入。
+
+```java
+@Component
+public class MysqlConnConfig {
+    private String username;
+    private String password;
+}
+
+@Configuration
+@Import(value = {MysqlConnConfig.class})
+public class MysqlConfiguration {
+    // ...
+}
+```
+
 ### @Bean
 
 ## 改变Bean的作用范围的注解

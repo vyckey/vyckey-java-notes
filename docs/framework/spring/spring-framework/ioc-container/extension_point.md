@@ -7,6 +7,10 @@ sidebar_position: 6
 
 BeanPostProcessor
 
+BeanFactoryPostProcessor
+
+BeanDefinitionRegistryPostProcessor
+
 ObjectFactory
 
 FactoryBean

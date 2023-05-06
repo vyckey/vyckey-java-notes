@@ -2,7 +2,7 @@
 title: Autowired
 tags: [java, spring, autowired]
 sidebar_label: Autowired
-sidebar_position: 2
+sidebar_position: 4
 ---
 
 # @Autowired 和 @Resource 实现详解

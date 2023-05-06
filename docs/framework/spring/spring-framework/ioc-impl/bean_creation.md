@@ -2,7 +2,7 @@
 title: Bean Creation
 tags: [java, spring, bean]
 sidebar_label: Bean Creation
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Bean 的创建过程
@@ -439,8 +439,11 @@ try {
     throw new BeanDefinitionStoreException(mbdToUse.getResourceDescription(),
             beanName, "Validation of method overrides failed", ex);
 }
-<lookup-method /> 和 <replace-method /> 标签会被解析成 LookupOverride 和 ReplaceOverride 对象，用于实现或覆盖某个方法，这里会进行验证和准备工作，过程如下：
+```
 
+`<lookup-method />` 和 <replace-method /> 标签会被解析成 `LookupOverride` 和 `ReplaceOverride` 对象，用于实现或覆盖某个方法，这里会进行验证和准备工作，过程如下：
+
+```java
 // AbstractBeanDefinition.java
 public void prepareMethodOverrides() throws BeanDefinitionValidationException {
     // Check that lookup methods exist and determine their overloaded status.
@@ -1018,7 +1021,7 @@ protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable B
 1. 如果实例对象为 `null` ，则进行下面的判断。
    1. 这个 `Bean` 有属性，则抛出异常。
    2. 否则，不用属性填充，直接 `return` 。
-2. 实例化阶段的后置处理，如果满足这两个条件： `RootBeanDefinition` 不是用户定义的（由 `Spring` 解析出来的）、是否有 `InstantiationAwareBeanPostProcessor` 处理器。
+2. 实例化阶段的后置处理，如果满足这两个条件： `RootBeanDefinition` 不是用户定义的（由 `Spring` 解析出来的）、有 `InstantiationAwareBeanPostProcessor` 处理器。
    1. 遍历所有的 `BeanPostProcessor` 。
    2. 如果为 `InstantiationAwareBeanPostProcessor` 类型，则对实例化对象进行后置处理。注意，如果返回 `false` ，直接 `return` ，不会调用后面的 `InstantiationAwareBeanPostProcessor` 处理器，也不会进行接下来的属性填充。
 3. 获取 `pvs` ，承载当前对象的属性值。
@@ -1148,7 +1151,7 @@ private void invokeAwareMethods(final String beanName, final Object bean) {
 }
 ```
 
-如果是 `BeanNameAware`、`BeanClassLoaderAware` 或 `BeanFactoryAware`，则调用其 `setXxx` 方法
+如果是 `BeanNameAware`、`BeanClassLoaderAware` 或 `BeanFactoryAware`，则调用其 `setXxx` 方法。
 
 2. 初始化阶段的前置处理，执行所有 `BeanPostProcessor` 的 `postProcessBeforeInitialization` 方法，如下：
 
@@ -1175,10 +1178,8 @@ public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, S
 ```
 
 例如 Spring 内部有下面两个处理器
-
-`ApplicationContextAwareProcessor`：`ApplicationContextAware`、`ApplicationEventPublisherAware`、`EnvironmentAware` 等其他 `Aware` 接口的回调
-
-`CommonAnnotationBeanPostProcessor`： `@PostConstruct` 注解标注的方法的调用
+* `ApplicationContextAwareProcessor`：`ApplicationContextAware`、`ApplicationEventPublisherAware`、`EnvironmentAware` 等其他 `Aware` 接口的回调。
+* `CommonAnnotationBeanPostProcessor`： `@PostConstruct` 注解标注的方法的调用。
 
 3. 激活自定义的初始化方法，如下：
 
