@@ -1,8 +1,8 @@
 ---
-title: Jackson Framework
-tags: [java, jackson]
-sidebar_label: Jackson Framework
-sidebar_position: 2
+title: Jackson Annotation
+tags: [java, jackson, anotation]
+sidebar_label: Annotation Examples
+sidebar_position: 3
 ---
 
 [toc]
@@ -678,6 +678,39 @@ public void whenSerializingUsingJsonIgnoreType_thenCorrect() throws JsonProcessi
 }
 ```
 
+我们也可以定义一个 MixIn 的方式来对某个类型进行忽略。
+
+```java
+@JsonIgnoreType
+public class MyMixInForIgnoreType {}
+
+mapper.addMixInAnnotations(String[].class, MyMixInForIgnoreType.class);
+```
+
+如下是使用示例：
+
+```java
+public class MyDtoWithSpecialField {
+    private String[] stringValue;
+    private int intValue;
+    private boolean booleanValue;
+}
+
+@Test
+public final void givenFieldTypeIsIgnored_whenDtoIsSerialized_thenCorrect() throws JsonParseException, IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.addMixIn(String[].class, MyMixInForIgnoreType.class);
+    MyDtoWithSpecialField dtoObject = new MyDtoWithSpecialField();
+    dtoObject.setBooleanValue(true);
+
+    String dtoAsString = mapper.writeValueAsString(dtoObject);
+
+    assertThat(dtoAsString, containsString("intValue"));
+    assertThat(dtoAsString, containsString("booleanValue"));
+    assertThat(dtoAsString, not(containsString("stringValue")));
+}
+```
+
 ### 3.4 @JsonInclude
 
 我们可以使用 `@JsonInclude` 来排除具有空/空/默认值的属性。
@@ -689,6 +722,8 @@ public void whenSerializingUsingJsonIgnoreType_thenCorrect() throws JsonProcessi
 public class MyBean {
     public int id;
     public String name;
+    // @JsonInclude(Include.NON_NULL)
+    public String description;
 }
 
 public void whenSerializingUsingJsonInclude_thenCorrect() throws JsonProcessingException {
@@ -700,6 +735,8 @@ public void whenSerializingUsingJsonInclude_thenCorrect() throws JsonProcessingE
     assertThat(result, not(containsString("name")));
 }
 ```
+
+你也可以用过 `objectMapper.setSerializationInclusion(Include.NON_NULL);` 来全局地控制不序列化空字段。
 
 ### 3.5 @JsonIncludeProperties
 

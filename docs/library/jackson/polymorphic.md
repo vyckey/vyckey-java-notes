@@ -1,8 +1,8 @@
 ---
-title: Polymorphic
+title: Jackson Polymorphic
 tags: [java, json, jackson]
 sidebar_label: Polymorphic
-sidebar_position: 2
+sidebar_position: 5
 ---
 
 自定义属性多态反序列化
