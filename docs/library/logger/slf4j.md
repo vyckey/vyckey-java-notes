@@ -72,7 +72,7 @@ Slf4j和其他桥接器日志组件jar包说明
 | slf4j-jcl-2.0.0.jar | Jakarta Commons Logging 的桥接器. 桥接器将Slf4j所有日志委派给Jcl |
 | logback-classic-${logback.version}.jar | Slf4j的原生实现，Logback直接实现了Slf4j的接口，因此使用Slf4j与Logback的结合使用也意味更小的内存与计算开销 |
 
-![slf4j-bindings](/images/framework/slf4j-bindings.png)
+![slf4j-bindings](../../../static/images/framework/slf4j-bindings.png)
 
 切换不同的日志框架，只需要在classpath中替换slf4j的bindings。例如从java.util.logging切换到log4j，只需要替换slf4j-jdk14.jar到slf4j-log4j12.jar。SLF4J 不依赖任何特殊的类加载器机制，每个 SLF4J 绑定在编译时都是硬链接的，你只需要把需要的日志框架放置到合适的classpath即可（注意只能使用一个binding）。
 
@@ -80,7 +80,7 @@ Slf4j和其他桥接器日志组件jar包说明
 
 经常地，有些组件依赖一个非SLF4J的日志API。例如Spring Framework使用的是日志组件是Commons Logging，XSocket依赖的则是Java Util Logging。你可以假设这些组件不久会切换到SLF4J，为了处理这种情况，SLF4J提供了几个模块可以重定向调用到SLF4J，包含log4j、JCL和JUL等，下图展示了这种想法：
 
-![slf4j桥接重定向示例图](/images/framework/slf4j-legacy.png)
+![slf4j桥接重定向示例图](../../../static/images/framework/slf4j-legacy.png)
 
 ```text
 log4j -> 重定向到SLF4j -> slf4j-log4j12-version.jar -> log4j.jar -> 输出日志

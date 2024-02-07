@@ -19,7 +19,7 @@ sidebar_position: 1
 
 `Thread` 类有一个类型为 `ThreadLocal.ThreadLocalMap` 的实例变量 `threadLocals` ，也就是说每个线程有一个自己的 `ThreadLocalMap` 。`ThreadLocalMap` 有自己的独立实现，可以简单地将它的 `key` 视作 `ThreadLocal` （实际上 `key` 并不是 `ThreadLocal` 本身，而是它的一个弱引用）， `value` 为代码中放入的值。每个线程在往 `ThreadLocal` 里放值的时候，都会往自己的 `ThreadLocalMap` 里存，读也是以 `ThreadLocal` 作为引用，在自己的 `map` 里找对应的 `key` ，从而实现了线程隔离。 `ThreadLocalMap` 有点类似 `HashMap` 的结构，只是 `HashMap` 是由数组+链表实现的，而 `ThreadLocalMap` 中并没有链表结构。我们还要注意 `Entry` ， 它的 `key` 是 `ThreadLocal<?> k `，继承自 `WeakReference` ，也就是我们常说的弱引用类型。
 
-![](/images/java/concurrent/threadlocal-ds.png)
+![](../../../static/images/java/concurrent/threadlocal-ds.png)
 
 下面是来自 `ThreadLocal` 的部分核心源码，可以很清晰地看出上图的原理：
 
@@ -104,7 +104,7 @@ static class ThreadLocalMap {
 
 ## ThreadLocal的Entry设计
 
-![](/images/java/concurrent/threadlocal-reference.png)
+![](../../../static/images/java/concurrent/threadlocal-reference.png)
 
 ### 为什么Entry要使用弱引用？
 
@@ -127,7 +127,7 @@ static class ThreadLocalMap {
 
 `ThreadLocal.get()` 操作， `ThreadLocal` 的对象引用被Stack持有，此时还是有强引用存在的，所以 `key` 并不为 `null` ，也就是不会被GC回收，如下图所示：
 
-![](/images/java/concurrent/threadlocal-reference2.png)
+![](../../../static/images/java/concurrent/threadlocal-reference2.png)
 
 ## ThreadLocal的Hash算法
 
@@ -163,7 +163,7 @@ public class ThreadLocal<T> {
 
 虽然 `ThreadLocalMap` 中使用了黄金分割数来作为 `hash` 计算因子，大大减少了 `hash` 冲突的概率，但是仍然会存在冲突。`HashMap` 中解决冲突的方法是在数组上构造一个链表结构，冲突的数据挂载到链表上，如果链表长度超过一定数量则会转化成红黑树。而 `ThreadLocalMap` 中并没有链表结构，所以这里不能使用 `HashMap` 解决冲突的方式了。
 
-![](/images/java/concurrent/threadlocal-hash.png)
+![](../../../static/images/java/concurrent/threadlocal-hash.png)
 
 > 注明：示例图中，绿色块Entry代表正常数据，灰色块代表Entry的key值为null，已被垃圾回收。白色块表示Entry为null。
 
@@ -205,15 +205,15 @@ public class ThreadLocal<T> {
 
 第一种情况： 通过查找 `key` 值计算出散列表中 `slot` 位置，然后该 `slot` 位置中的 `Entry.key` 和查找的 `key` 一致，则直接返回：
 
-![](/images/java/concurrent/threadlocal-get1.png)
+![](../../../static/images/java/concurrent/threadlocal-get1.png)
 
 第二种情况： `slot` 位置中的 `Entry.key` 和要查找的 `key` 不一致。我们以 `get(ThreadLocal1)` 为例，通过 `hash` 计算后，正确的 `slot` 位置应该是 `4` ，而 `index=4` 的槽位已经有了数据，且 `key` 值不等于 `ThreadLocal1` ，所以需要继续往后迭代查找。
 
-![](/images/java/concurrent/threadlocal-get2.png)
+![](../../../static/images/java/concurrent/threadlocal-get2.png)
 
 迭代到 `index=5` 的数据时，此时 `Entry.key=null` ，触发一次**探测式数据回收**操作，即执行 `expungeStaleEntry()` 方法（参考后续的介绍），执行完后，`index 5,8`的数据都会被回收，而`index 6,7`的数据都会前移。`index 6,7`前移之后，继续从 `index=5` 往后迭代，于是就在 `index=5` 找到了 `key` 值相等的 `Entry` 数据，如下图所示：
 
-![](/images/java/concurrent/threadlocal-get3.png)
+![](../../../static/images/java/concurrent/threadlocal-get3.png)
 
 ## ThreadLocalMap的set原理
 
@@ -252,16 +252,16 @@ public class ThreadLocal<T> {
 往 `ThreadLocalMap` 中 `set` 数据（新增或者更新数据）分为好几种情况，针对不同的情况我们画图来说明。
 
 第一种情况： 通过hash计算后的槽位对应的Entry数据为空，这里直接将数据放到该槽位即可：
-![](/images/java/concurrent/threadlocal-set1.png)
+![](../../../static/images/java/concurrent/threadlocal-set1.png)
 
 第二种情况： 槽位数据不为空，`key` 值与当前 `ThreadLocal` 通过 `hash` 计算获取的 `key` 值一致：这里直接更新该槽位的数据。
-![](/images/java/concurrent/threadlocal-set2.png)
+![](../../../static/images/java/concurrent/threadlocal-set2.png)
 
 第三种情况： 槽位数据不为空，往后遍历过程中，在找到 `Entry` 为 `null` 的槽位之前，没有遇到 `key` 过期的 `Entry` 。遍历散列数组，线性往后查找，如果找到 `Entry` 为 `null` 的槽位，则将数据放入该槽位中，或者往后遍历过程中，遇到了 `key` 值相等的数据，直接更新即可。
-![](/images/java/concurrent/threadlocal-set3.png)
+![](../../../static/images/java/concurrent/threadlocal-set3.png)
 
 第四种情况： 槽位数据不为空，往后遍历过程中，在找到 `Entry` 为 `null` 的槽位之前，遇到 `key` 过期的 `Entry` ，如下图，往后遍历过程中，遇到了 `index=7` 的槽位数据 Entry 的 `key=null`：
-![](/images/java/concurrent/threadlocal-set4.png)
+![](../../../static/images/java/concurrent/threadlocal-set4.png)
 
 散列数组下标为 `7` 位置对应的 `Entry` 数据 `key` 为 `null` ，表明此数据 `key` 值已经被垃圾回收掉了。此时就会执行 `replaceStaleEntry()` 方法，该方法含义是替换过期数据的逻辑，以 `index=7` 位起点开始遍历，进行**探测式数据清理**工作（后一章节会详细介绍），最后替换新的值 。
 
@@ -332,21 +332,21 @@ public class ThreadLocal<T> {
 ```
 
 1. 假定散列数组下标为 `7` 位置对应的 `Entry` 数据 `key` 为 `null` ：
-![](/images/java/concurrent/threadlocal-set4.png)
+![](../../../static/images/java/concurrent/threadlocal-set4.png)
 
 2. 以当前 `staleSlot` 开始向前迭代查找，找其他过期的数据，然后更新过期数据起始扫描下标 `slotToExpunge` 。`for` 循环迭代，直到碰到 `Entry` 为 `null` 结束。初始化探测式清理过期数据扫描的开始位置：`slotToExpunge = staleSlot = 7` 。以当前节点(`index=7`)向前迭代，检测是否有过期的 `Entry` 数据，如果有则更新 `slotToExpunge` 值。碰到 `null` 则结束探测。以上图为例 `slotToExpunge` 被更新为 `0` 。
-![](/images/java/concurrent/threadlocal-set5.png)
+![](../../../static/images/java/concurrent/threadlocal-set5.png)
 
 3. 接着开始以 `staleSlot` 位置(`index=7`)向后迭代，如果找到了相同 `key` 值的 `Entry` 数据：
-![](/images/java/concurrent/threadlocal-set6.png)
+![](../../../static/images/java/concurrent/threadlocal-set6.png)
 
 4. 从当前节点 `staleSlot` 向后查找 `key` 值相等的 `Entry` 元素，找到后更新 `Entry` 的值并交换 `staleSlot` 元素的位置( `staleSlot` 位置为过期元素)，更新 `Entry` 数据，然后开始进行过期 `Entry` 的清理工作，如下图所示：
-![](/images/java/concurrent/threadlocal-set7.png)
+![](../../../static/images/java/concurrent/threadlocal-set7.png)
 
 5. 向后遍历过程中，如果没有找到相同 `key` 值的 `Entry` 数据，直到 `Entry` 为 `null` 则停止寻找。创建新的 `Entry` ，替换 `table[stableSlot]` 位置：
 
-![](/images/java/concurrent/threadlocal-set8.png)
-![](/images/java/concurrent/threadlocal-set9.png)
+![](../../../static/images/java/concurrent/threadlocal-set8.png)
+![](../../../static/images/java/concurrent/threadlocal-set9.png)
 
 
 
@@ -390,11 +390,11 @@ public class ThreadLocal<T> {
 ```
 
 1. 如下图，`set(27)` 经过 `hash` 计算后应该落到 `index=4` 的桶中，由于 `index=4` 桶已经有了数据，所以往后迭代最终数据放入到 `index=7` 的桶中，放入后一段时间后 `index=5` 中的 `Entry` 数据 `key` 变为了 `null` 。如果再有其他数据 `set` 到 `map` 中，就会触发探测式清理操作。
-![](/images/java/concurrent/threadlocal-expunge1.png)
+![](../../../static/images/java/concurrent/threadlocal-expunge1.png)
 
 1. 执行探测式清理后，`index=5` 的数据被清理掉，继续往后迭代，到 `index=7` 的元素时，经过 `rehash` 后发现该元素正确的 `index=4` ，而此位置已经有了数据，往后查找离 `index=4` 最近的 `Entry=null` 的节点(刚被探测式清理掉的数据：`index=5` )，找到后移动 `index=7` 的数据到 `index=5` 中，此时桶的位置离正确的位置 `index=4` 更近了。经过一轮探测式清理后， `key` 过期的数据会被清理掉，没过期的数据经过 `rehash` 重定位后所处的桶位置理论上更接近 `i = key.hashCode & (tab.len - 1)` 的位置。这种优化会提高整个散列表查询性能。
 
-![](/images/java/concurrent/threadlocal-expunge2.png)
+![](../../../static/images/java/concurrent/threadlocal-expunge2.png)
 
 
 ### 启发式清理
@@ -419,7 +419,7 @@ public class ThreadLocal<T> {
     }
 ```
 
-![](/images/java/concurrent/threadlocal-clean.png)
+![](../../../static/images/java/concurrent/threadlocal-clean.png)
 
 ## ThreadLocalMap扩容机制
 
@@ -452,7 +452,7 @@ public class ThreadLocal<T> {
 
 在 `expungeStaleEntries()` 方法中会进行探测式清理工作，从 `table` 的起始位置往后清理，上面有分析清理的详细流程。清理完成之后， `table中` 可能有一些 `key` 为 `null` 的 `Entry` 数据被清理掉，所以此时通过判断 `size >= threshold - threshold / 4` 也就是 `size >= threshold * 3/4` 来决定是否扩容。我们还记得上面进行 `rehash()` 的阈值是 `size >= threshold`，这两个阈值容易混淆，所以一定要清楚这两个的区别：
 
-![](/images/java/concurrent/threadlocal-rehash.png)
+![](../../../static/images/java/concurrent/threadlocal-rehash.png)
 
 接下来就是最关键的扩容方法的实现了：
 ```java

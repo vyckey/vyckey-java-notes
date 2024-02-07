@@ -11,4 +11,4 @@ sidebar_position: 3
 
 * [GitHub - FasterXML/jackson](https://github.com/FasterXML/jackson)
 * [GitHub - FasterXML/jackson wiki](https://github.com/FasterXML/jackson/wiki)
-* [GitHub - FasterXML/jackson-doc](https://github.com/FasterXML/jackson-doc)
+* [GitHub - FasterXML/jackson-doc](https://github.com/FasterXML/jackson-docs)

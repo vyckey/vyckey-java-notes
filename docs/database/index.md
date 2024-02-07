@@ -18,7 +18,7 @@ sidebar_position: 4
 
 数据库系统基本构成如下图所示：
 
-![](/images/database/db-system.jpeg)
+![](../../static/images/database/db-system.jpeg)
 
 ### 关键
 
@@ -48,7 +48,7 @@ sidebar_position: 4
 
 2NF 在 1NF 的基础之上，**消除了非主属性对于码的部分函数依赖**。如下图所示，展示了第一范式到第二范式的过渡。第二范式在第一范式的基础上增加了一个列，这个列称为主键，非主属性都依赖于主键。
 
-![](/images/database/db-nf-example.png)
+![](../../static/images/database/db-nf-example.png)
 
 一些重要的概念：
 * **函数依赖**（functional dependency） ：若在一张表中，在属性（或属性组）X 的值确定的情况下，必定能确定属性 Y 的值，那么就可以说 Y 函数依赖于 X，写作 X → Y。
@@ -64,10 +64,10 @@ sidebar_position: 4
 E-R 图 也称实体-联系图(Entity Relationship Diagram)，提供了表示实体类型、属性和联系的方法，用来描述现实世界的概念模型。 它是描述现实世界关系概念模型的有效方法。 是表示概念关系模型的一种方式。
 
 下图是一个学生选课的 ER 图，每个学生可以选若干门课程，同一门课程也可以被若干人选择，所以它们之间的关系是多对多（M: N）。另外，还有其他两种关系是：1 对 1（1:1）、1 对多（1: N）。
-![](/images/database/er-example.png)
+![](../../static/images/database/er-example.png)
 
 我们试着将上面的 ER 图转换成数据库实际的关系模型(实际设计中，我们通常会将任课教师也作为一个实体来处理)：
-![](/images/database/er-example2.png)
+![](../../static/images/database/er-example2.png)
 
 ## 数据库类型
 
@@ -91,7 +91,7 @@ NoSQL 数据库主要可以分为下面四种类型：
 | 图 | Neo4j、JanusGraph、Giraph |
 | 宽列 | Cassandra、HBase |
 
-![NoSQL类型](/images/database/types-of-nosql-datastores.png)
+![NoSQL类型](../../static/images/database/types-of-nosql-datastores.png)
 
 ## 事务（Transaction）
 

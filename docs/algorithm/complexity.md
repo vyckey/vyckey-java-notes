@@ -32,7 +32,7 @@ NTM 有时用于思想实验，以检查计算机的能力和局限性。 理论
 
 ## DTM vs NTM
 
-![](/static/images/algorithm/Difference_between_deterministic_and_Nondeterministic.svg.png)
+![](../../static/images/algorithm/Difference_between_deterministic_and_Nondeterministic.svg.png)
 
 
 # P, NP, NP-complete, NP-hard Problem
@@ -69,7 +69,7 @@ P问题是指可以在多项式时间内解决或验证的问题。具体来说�
 
 [P versus NP problem](https://en.wikipedia.org/wiki/P_versus_NP_problem)
 
-![](/static/images/algorithm/P_np_np-complete_np-hard.svg.png)
+![](../../static/images/algorithm/P_np_np-complete_np-hard.svg.png)
 
 # 参考资料
 

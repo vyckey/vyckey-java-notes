@@ -12,19 +12,19 @@
 
 异步日志峰值吞吐量比较：
 
-![日志框架异步吞吐量比较](/images/framework/log4j-aync-throughput-compare.png)
+![日志框架异步吞吐量比较](../../../static/images/framework/log4j-aync-throughput-compare.png)
 
 异步日志响应时长比较：
-![日志框架异步延迟比较](/images/framework/log4j-aync-latency-compare.png)
+![日志框架异步延迟比较](../../../static/images/framework/log4j-aync-latency-compare.png)
 
 异步日志消息参数化比较
-![日志框架异步消息参数化比较](/images/framework/log4j-aync-message-compare.png)
+![日志框架异步消息参数化比较](../../../static/images/framework/log4j-aync-message-compare.png)
 
 ## Log4j日志框架
 
 Log4j的核心组件类图如下：
 
-![log4j核心组件类图](/images/framework/log4j-arch.png)
+![log4j核心组件类图](../../../static/images/framework/log4j-arch.png)
 
 应用方使用Log4j2的API，指定的`name`请求`LogManager`获取`Logger`。`LogManager`会定位到一个`LoggerContext`，然后由它获取`Logger`，如果`Logger`需要新建的话，则会关联一个`LoggerConfig`。`LoggerConfig`由`Logger`的配置生成，有三种来源：`Logger`同名、父目录包或根目录包配置，然后关联到发送`LogEvents`的`Appenders`。
 

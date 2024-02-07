@@ -213,7 +213,7 @@ ObjectMonitor() {
 
 Java Monitor 的工作机理如图所示：
 
-![](/images/java/concurrent/object_monitor.awebp)
+![](../../../static/images/java/concurrent/object_monitor.awebp)
 
 1. 想要获取 `monitor` 的线程,首先会进入 `_EntryList` 队列。
 2. 当某个线程获取到对象的 `monitor` 后,进入 `_Owner` 区域，设置为当前线程,同时计数器 `_count` 加 `1`。
@@ -234,7 +234,7 @@ synchronized(this) {  //进入_EntryList队列
 
 对象是如何跟monitor关联的呢？直接先看图：
 
-![](/images/java/concurrent/object_monitor__object.awebp)
+![](../../../static/images/java/concurrent/object_monitor__object.awebp)
 
 对象头主要包括两部分数据：
 * **Mark Word** : 用于存储对象自身的运行时数据，它是实现轻量级锁和偏向锁的关键。
