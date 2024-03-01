@@ -2,7 +2,7 @@
 title: Algorithm Complexity
 tags: [p, np, npc, ntm]
 sidebar_label: Algorithm Complexity
-sidebar_position: 6
+sidebar_position: 2
 ---
 
 # DTM, NTM

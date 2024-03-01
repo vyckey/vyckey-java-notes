@@ -1,3 +1,11 @@
+---
+title: Mybatis
+tags: [orm, mybatis]
+sidebar_label: Mybatis
+sidebar_position: 4
+---
+
+# Mybatis
 
 # 参考资料
 

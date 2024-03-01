@@ -22,13 +22,13 @@ Spring 的缓存技术还具备相当的灵活性，不仅能够使用 SpEL（Sp
 
 和 spring 的事务管理类似，spring cache 的关键原理就是 spring AOP，通过 spring AOP，其实现了在方法调用前、调用后获取方法的入参和返回值，进而实现了缓存的逻辑。我们来看一下下面这个图：
 
-![](../../../../static/images/database/cache/spring-cache1.jpg)
+![](../../../static/images/database/cache/spring-cache1.jpg)
 
 上图显示，当客户端“Calling code”调用一个普通类 Plain Object 的 `foo()` 方法的时候，是直接作用在 `pojo` 类自身对象上的，客户端拥有的是被调用者的直接的引用。
 
 而 Spring Cache 利用了 Spring AOP 的动态代理技术，即当客户端尝试调用 `pojo` 的 `foo()` 方法的时候，给他的不是 `pojo` 自身的引用，而是一个动态生成的代理类
 
-![](../../../../static/images/database/cache/spring-cache2.jpg)
+![](../../../static/images/database/cache/spring-cache2.jpg)
 
 如上图所示，这个时候，实际客户端拥有的是一个代理的引用，那么在调用 `foo()` 方法的时候，会首先调用 `proxy` 的 `foo()` 方法，这个时候 `proxy` 可以整体控制实际的 `pojo.foo()` 方法的入参和返回值，比如缓存结果，比如直接略过执行实际的 `foo()` 方法等，都是可以轻松做到的。
 
