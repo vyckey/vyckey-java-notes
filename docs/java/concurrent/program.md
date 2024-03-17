@@ -252,5 +252,61 @@ public class StudentRunRace {
 }
 ```
 
+## 多线程循环打印数字
+
+问题：创建 `n` （其中 `n>=2` ）个线程，每个线程 `i`（其中 `i>=1` ） 轮流打印数字 `i` ，并循环打印。
+
+## 使用 `wait()` 和 `notifyAll()` 实现
+
+```java
+public class NumberPrinter {
+    private final Object lock = new Object();
+    private final int threadNum;
+    private Integer integer = 1;
+    private int printThreadId = 1;
+
+    public NumberPrinter(int threadNum) {
+        this.threadNum = threadNum;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new NumberPrinter(3).print();
+
+        Thread.sleep(5000);
+    }
+
+    public void print() {
+        for (int i = 0; i < threadNum; i++) {
+            startThread(i + 1);
+        }
+    }
+
+    private void startThread(int threadId) {
+        Thread thread = new Thread(() -> {
+            while (true) {
+                synchronized (lock) {
+                    while (printThreadId != threadId) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                    System.out.println(Thread.currentThread().getName() + ":" + integer++);
+                    printThreadId++;
+                    if (integer > threadNum) {
+                        integer = 1;
+                        printThreadId = 1;
+                    }
+
+                    lock.notifyAll();
+                }
+            }
+        }, "Thread" + threadId);
+        thread.start();
+    }
+}
+```
 
 * [掘金 - Java实现生产者和消费者的5种方式](https://juejin.cn/post/6844903486895865864)
